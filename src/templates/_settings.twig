@@ -10,7 +10,7 @@
 }) }}
 
 {{ forms.textField({
-    label:        "Please fill in your API key from openmaps.org" | t,
+    label:        "Please fill in your API key from openweathermap.org" | t,
     class:        'required',
     id:           'openmapsAPIKey',
     name:         'openmapsAPIKey',
@@ -26,6 +26,16 @@
     instructions: "Determines when a location needs to be updated with the latest data"|t,
     errors:       settings.getErrors('updateInterval'),
     value:        settings.updateInterval
+}) }}
+
+{{ forms.select({
+    label:        "Which language should be returned by OpenWeatherMap?" | t,
+    id:           'language',
+    name:         'language',
+    instructions: "Which language should be returned from the OpenWeather API"|t,
+    errors:       settings.getErrors('language'),
+    value:        settings.language,
+    options:      settings.availableLanguages
 }) }}
 
 {{ forms.textField({

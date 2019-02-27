@@ -22,8 +22,9 @@ use craft\db\ActiveRecord;
  * @property string $city_name The city name
  * @property string $city_id The city id
  * @property string $country_iso The ISO 3166 country code
- * @property string $openWeather_status The current OpenWeather status
- * @property integer $openWeather_code The OpenWeather code as described in https://openOpenWeathermap.org/OpenWeather-conditions
+ * @property string $weather_description The current OpenWeather description
+ * @property string $weather_status The current OpenWeather status
+ * @property integer $weather_code The OpenWeather code as described in https://openOpenWeathermap.org/OpenWeather-conditions
  * @property float $temperature The temperature in metric system
  * @property integer $humidity The percentage of humidity
  * @property integer $cloudiness The percentage of clouds

@@ -42,6 +42,8 @@ class OpenWeatherService extends Component
         $this->params['units'] = 'metric';
         $this->params['lat'] = $this->settings->latitude;
         $this->params['lon'] = $this->settings->longitude;
+        $this->params['lang'] = $this->settings->language;
+
         parent::__construct();
     }
 
@@ -60,14 +62,14 @@ class OpenWeatherService extends Component
             $this->params['lon'] = $params['lon'];
             $openWeatherEntry = OpenWeatherEntry::findOne([
                 'lat' => $this->params['lat'],
-                'lon' => $this->params['lon']
+                'lon' => $this->params['lon'],
             ]);
         }
         // get entry from city name
         if (!empty($params['city_name'])) {
             $this->params['city_name'] = $params['city_name'];
             $openWeatherEntry = OpenWeatherEntry::findOne([
-                'city_name' => $this->params['city_name']
+                'city_name' => $this->params['city_name'],
             ]);
         }
         // get default entry
@@ -94,7 +96,7 @@ class OpenWeatherService extends Component
             }
             // check if OpenWeather station already exists to avoid duplicate
             $openWeatherEntryNew = OpenWeatherEntry::findOne([
-                'city_id' => $openWeather['id']
+                'city_id' => $openWeather['id'],
             ]);
             if (!empty($openWeatherEntryNew)) {
                 $openWeatherEntry = $openWeatherEntryNew;
@@ -111,6 +113,7 @@ class OpenWeatherService extends Component
             }
             $openWeatherEntry->country_iso = isset($openWeather['sys']['country']) ? $openWeather['sys']['country'] : '';
             $openWeatherEntry->weather_status = isset($openWeather['weather'][0]['main']) ? $openWeather['weather'][0]['main'] : '';
+            $openWeatherEntry->weather_description = isset($openWeather['weather'][0]['description']) ? $openWeather['weather'][0]['description'] : '';
             $openWeatherEntry->weather_code = isset($openWeather['weather'][0]['id']) ? $openWeather['weather'][0]['id'] : '';
             $openWeatherEntry->temperature = isset($openWeather['main']['temp']) ? $openWeather['main']['temp'] : '';
             $openWeatherEntry->humidity = isset($openWeather['main']['humidity']) ? $openWeather['main']['humidity'] : '';
@@ -209,6 +212,7 @@ class OpenWeatherService extends Component
         } else {
             $data = [
                 'status' => $entry->weather_status,
+                'description' => $entry->weather_description,
                 'code' => $entry->weather_code,
                 'city' => $entry->city_name,
                 'label' => $entry->label,
@@ -219,7 +223,7 @@ class OpenWeatherService extends Component
                 'wind_speed' => $entry->wind_speed,
                 'wind_direction' => $entry->wind_direction,
                 'sunrise' => $sunriseTime,
-                'sunset' => $sunsetTime
+                'sunset' => $sunsetTime,
             ];
         }
         return $data;
@@ -271,6 +275,8 @@ class OpenWeatherService extends Component
         } else {
             $data['wind_direction'] = 'N';
         }
+
+        $data['description'] = $entry->weather_description;
 
         // set a status based on logic before
         if ($data['clear']) {
